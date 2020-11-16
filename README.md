@@ -1,11 +1,13 @@
-# Very short description of the package
+# Laravel Tickets
+
+##### This package is still under development and is not yet suitable for use
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rexlmanu/laravel-tickets.svg?style=flat-square)](https://packagist.org/packages/rexlmanu/laravel-tickets)
 [![Build Status](https://img.shields.io/travis/rexlmanu/laravel-tickets/master.svg?style=flat-square)](https://travis-ci.org/rexlmanu/laravel-tickets)
 [![Quality Score](https://img.shields.io/scrutinizer/g/rexlmanu/laravel-tickets.svg?style=flat-square)](https://scrutinizer-ci.com/g/rexlmanu/laravel-tickets)
 [![Total Downloads](https://img.shields.io/packagist/dt/rexlmanu/laravel-tickets.svg?style=flat-square)](https://packagist.org/packages/rexlmanu/laravel-tickets)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Simple but effective solution to provide support. Due to its lightweight construction, it fits into any project. In addition, it offers a wide range of configuration options from the start and is therefore suitable for any area.
 
 ## Installation
 
@@ -15,10 +17,15 @@ You can install the package via composer:
 composer require rexlmanu/laravel-tickets
 ```
 
-## Usage
+After the installation
+```bash
+php artisan vendor:publish --tag="laravel-tickets"
+```
+
+## Documentation
 
 ``` php
-// Usage description here
+// Still in creation
 ```
 
 ### Testing
@@ -26,10 +33,6 @@ composer require rexlmanu/laravel-tickets
 ``` bash
 composer test
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Contributing
 
@@ -47,7 +50,3 @@ If you discover any security related issues, please email rexlmanude@gmail.com i
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).

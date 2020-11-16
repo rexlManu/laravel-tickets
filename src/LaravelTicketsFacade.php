@@ -4,9 +4,6 @@ namespace RexlManu\LaravelTickets;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \RexlManu\LaravelTickets\Skeleton\SkeletonClass
- */
 class LaravelTicketsFacade extends Facade
 {
     /**
