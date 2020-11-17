@@ -16,6 +16,9 @@ Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->gr
             Route::get('/', [ TicketController::class, 'show' ])->name('tickets.show');
             Route::post('/', [ TicketController::class, 'close' ])->name('tickets.close');
             Route::post('/message', [ TicketController::class, 'message' ])->name('tickets.message');
+            Route::prefix('{ticketUpload}')->group(function () {
+                Route::get('/download', [ TicketController::class, 'download' ])->name('tickets.download');
+            });
         });
     });
 });

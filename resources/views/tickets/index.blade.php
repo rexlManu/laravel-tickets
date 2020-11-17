@@ -1,3 +1,6 @@
+@extends(config('laravel-tickets.layouts'))
+
+@section('content')
 <div class="card">
     <div class="card-header">
         @lang('Tickets')
@@ -43,4 +46,5 @@
 
     </div>
 </div>
+@endsection
 

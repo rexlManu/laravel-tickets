@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Tickets extends Migration
+class CreateTicketsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class Tickets extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('subject');
-            $table->enum('priority', [ 'LOW', 'MEDIUM', 'HIGH' ]);
+            $table->enum('priority', config('laravel-tickets.priorities'));
             $table->enum('state', [ 'OPEN', 'ANSWERED', 'CLOSED' ])->default('OPEN');
             $table->timestamps();
 
@@ -34,6 +34,15 @@ class Tickets extends Migration
             $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
             $table->foreign('ticket_id')->on(config('laravel-tickets.database.tickets-table'))->references('id');
         });
+
+        Schema::create(config('laravel-tickets.database.ticket-uploads-table'), function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('ticket_message_id');
+            $table->string('path');
+            $table->timestamps();
+
+            $table->foreign('ticket_message_id')->on(config('laravel-tickets.database.ticket-messages-table'))->references('id');
+        });
     }
 
     /**
@@ -43,7 +52,8 @@ class Tickets extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
-        Schema::dropIfExists('ticket_messages');
+        Schema::dropIfExists(config('laravel-tickets.database.tickets-table'));
+        Schema::dropIfExists(config('laravel-tickets.database.ticket-messages-table'));
+        Schema::dropIfExists(config('laravel-tickets.database.ticket-uploads-table'));
     }
 }

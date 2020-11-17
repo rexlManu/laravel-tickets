@@ -13,13 +13,19 @@ class TicketMessage extends Model
         'message'
     ];
 
-    public function ticket() {
+    public function ticket()
+    {
         return $this->belongsTo(Ticket::class);
     }
 
     public function user()
     {
         return $this->belongsTo(config('laravel-tickets.user'));
+    }
+
+    public function uploads()
+    {
+        return $this->hasMany(TicketUpload::class);
     }
 
 }

@@ -15,6 +15,8 @@ use RexlManu\LaravelTickets\Events\TicketMessageEvent;
 use RexlManu\LaravelTickets\Events\TicketOpenEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
+use RexlManu\LaravelTickets\Models\TicketUpload;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class TicketController
@@ -29,7 +31,7 @@ class TicketController extends Controller
 {
 
     /**
-     * TicketController constructor
+     * @link TicketController constructor
      */
     public function __construct()
     {
@@ -42,14 +44,16 @@ class TicketController extends Controller
         $this->middleware(config('laravel-tickets.permissions.close-ticket'))->only('close');
         $this->middleware(config('laravel-tickets.permissions.show-ticket'))->only('show');
         $this->middleware(config('laravel-tickets.permissions.message-ticket'))->only('message');
+        $this->middleware(config('laravel-tickets.permissions.download-ticket'))->only('download');
     }
 
     /**
-     * Show every ticket that the user has created
+     * Show every @return View|JsonResponse
+     *
+     * @link Ticket that the user has created
      *
      * If the accept header is json, the response will be a json response
      *
-     * @return View|JsonResponse
      */
     public function index()
     {
@@ -73,18 +77,25 @@ class TicketController extends Controller
     }
 
     /**
-     * Creates a ticket
-     *
-     * @param Request $request the request
+     * Creates a @param Request $request the request
      *
      * @return View|JsonResponse|RedirectResponse
+     * @link Ticket
+     *
      */
     public function store(Request $request)
     {
         $data = $request->validate([
             'subject' => [ 'required', 'string', 'max:191' ],
-            'priority' => [ 'required', Rule::in([ 'LOW', 'MID', 'HIGH' ]) ],
-            'message' => [ 'required', 'string' ]
+            'priority' => [ 'required', Rule::in(config('laravel-tickets.priorities')) ],
+            'message' => [ 'required', 'string' ],
+            'files' => [ 'max:' . config('laravel-tickets.file.max-files') ],
+            'files.*' => [
+                'sometimes',
+                'file',
+                'max:' . config('laravel-tickets.file.size-limit'),
+                'mimes:' . config('laravel-tickets.file.memes'),
+            ]
         ]);
         if ($request->user()->tickets()->where('state', '!=', 'CLOSED')->count() >= config('laravel-tickets.maximal-open-tickets')) {
             $message = trans('You have reached the limit of open tickets');
@@ -103,6 +114,8 @@ class TicketController extends Controller
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
 
+        $this->handleFiles($data[ 'files' ], $ticketMessage);
+
         event(new TicketOpenEvent($ticket));
 
         $message = trans('The ticket was successfully created');
@@ -118,11 +131,11 @@ class TicketController extends Controller
     }
 
     /**
-     * Show detailed informations about the ticket and the informations
-     *
-     * @param Ticket $ticket
+     * Show detailed informations about the @param Ticket $ticket
      *
      * @return View|JsonResponse|RedirectResponse|void
+     * @link Ticket and the informations
+     *
      */
     public function show(Ticket $ticket)
     {
@@ -130,7 +143,7 @@ class TicketController extends Controller
             return abort(403);
         }
 
-        $messages = $ticket->messages()->orderBy('created_at', 'desc')->paginate(4);
+        $messages = $ticket->messages()->with('uploads')->orderBy('created_at', 'desc')->paginate(4);
 
         return \request()->wantsJson() ?
             response()->json(compact(
@@ -146,12 +159,13 @@ class TicketController extends Controller
     }
 
     /**
-     * Send a message to the ticket
+     * Send a message to the @param Request $request
      *
-     * @param Request $request
      * @param Ticket $ticket
      *
      * @return JsonResponse|RedirectResponse|void
+     * @link Ticket
+     *
      */
     public function message(Request $request, Ticket $ticket)
     {
@@ -170,13 +184,22 @@ class TicketController extends Controller
         }
 
         $data = $request->validate([
-            'message' => [ 'required', 'string' ]
+            'message' => [ 'required', 'string' ],
+            'files' => [ 'max:' . config('laravel-tickets.file.max-files') ],
+            'files.*' => [
+                'sometimes',
+                'file',
+                'max:' . config('laravel-tickets.file.size-limit'),
+                'mimes:' . config('laravel-tickets.file.memes'),
+            ]
         ]);
 
         $ticketMessage = new TicketMessage($data);
         $ticketMessage->user()->associate($request->user());
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
+
+        $this->handleFiles($data[ 'files' ], $ticketMessage);
 
         $ticket->update([ 'state' => 'OPEN' ]);
 
@@ -192,11 +215,11 @@ class TicketController extends Controller
     }
 
     /**
-     * Declare the ticket as closed.
-     *
-     * @param Ticket $ticket
+     * Declare the @param Ticket $ticket
      *
      * @return JsonResponse|RedirectResponse|void
+     * @link Ticket as closed.
+     *
      */
     public function close(Ticket $ticket)
     {
@@ -222,6 +245,49 @@ class TicketController extends Controller
                 'message',
                 $message
             );
+    }
+
+    /**
+     * Downloads the file from @param Ticket $ticket
+     *
+     * @param TicketUpload $ticketUpload
+     *
+     * @return BinaryFileResponse
+     * @link TicketUpload
+     *
+     */
+    public function download(Ticket $ticket, TicketUpload $ticketUpload)
+    {
+        if (! $ticket->user()->get()->contains(\request()->user()) ||
+            ! $ticket->messages()->get()->contains($ticketUpload->message()->first())) {
+            return abort(403);
+        }
+
+        return response()->download(storage_path('app/'.$ticketUpload->path));
+    }
+
+    /**
+     * Handles the uploaded files for the @param $files array uploaded files
+     *
+     * @param TicketMessage $ticketMessage
+     *
+     * @link TicketMessage
+     *
+     */
+    private function handleFiles($files, TicketMessage $ticketMessage)
+    {
+        if (! config('laravel-tickets.files') || $files === null) {
+            return;
+        }
+        foreach ($files as $file) {
+            $ticketMessage->uploads()->create([
+                'path' => $file->storeAs(
+                    config('laravel-tickets.file.path') . $ticketMessage->id,
+                    $file->getClientOriginalName(),
+                    config('laravel-tickets.file.driver')
+                )
+            ]);
+        }
     }
 
 }
