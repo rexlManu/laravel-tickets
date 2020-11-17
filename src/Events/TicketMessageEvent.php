@@ -23,8 +23,6 @@ class TicketMessageEvent
 
     /**
      * Create a new event instance.
-     *
-     * @return void
      */
     public function __construct(Ticket $ticket, TicketMessage $ticketMessage)
     {
