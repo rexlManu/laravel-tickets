@@ -1,7 +1,5 @@
 # Laravel Tickets
 
-##### This package is still under development and is not yet suitable for use
-
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rexlmanu/laravel-tickets.svg?style=flat-square)](https://packagist.org/packages/rexlmanu/laravel-tickets)
 [![Build Status](https://img.shields.io/travis/rexlmanu/laravel-tickets/master.svg?style=flat-square)](https://travis-ci.org/rexlmanu/laravel-tickets)
 [![Quality Score](https://img.shields.io/scrutinizer/g/rexlmanu/laravel-tickets.svg?style=flat-square)](https://scrutinizer-ci.com/g/rexlmanu/laravel-tickets)
@@ -18,6 +16,14 @@ Ticket creation:
 Ticket show:
 ![ticket show](.github/images/image3.png)
 
+## Todos
+
+- File uploads
+- model reference support
+- tailwind and vue frontend
+- admin ticket scaffold
+- unit tests
+
 ## Installation
 
 You can install the package via composer:
@@ -33,9 +39,17 @@ php artisan vendor:publish --provider=RexlManu\LaravelTickets\LaravelTicketsServ
 
 ## Documentation
 
-``` php
-// Still in creation
+Currently the views are only implemented for bootstrap. After publishing, you should implement the layouts.
+
+The trait ``HasTickets`` should be added to the user model
+```php
+class User
+{
+    use \RexlManu\LaravelTickets\Traits\HasTickets; // important for laravel-tickets
+}
 ```
+
+Config: All points of the configuration are documented.
 
 ### Testing
 
