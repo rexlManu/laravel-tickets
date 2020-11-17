@@ -11,11 +11,6 @@ return [
 
     'user' => App\Models\User::class,
 
-    /*
-     * Activate permission support
-     */
-    'permission' => false,
-
     'database' => [
         'users-table' => 'users',
         'tickets-table' => 'tickets',
@@ -29,5 +24,21 @@ return [
     /*
      * How many days after last message sent, the ticket gets as closed declared
      */
-    'autoclose-days' => 7
+    'autoclose-days' => 7,
+
+    /*
+     * Activate permission support
+     */
+    'permission' => false,
+
+    /*
+     * The permissions that should be used for tickets
+     */
+    'permissions' => [
+        'create-ticket' => 'can:tickets.create',
+        'list-ticket' => 'can:tickets.index',
+        'close-ticket' => 'can:tickets.close',
+        'show-ticket' => 'can:tickets.show',
+        'message-ticket' => 'can:tickets.message',
+    ]
 ];
