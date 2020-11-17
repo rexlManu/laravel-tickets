@@ -9,6 +9,15 @@
 
 Simple but effective solution to provide support. Due to its lightweight construction, it fits into any project. In addition, it offers a wide range of configuration options from the start and is therefore suitable for any area.
 
+## Preview
+
+Ticket list:
+![ticket list](.github/images/image1.png)
+Ticket creation:
+![ticket create](.github/images/image2.png)
+Ticket show:
+![ticket show](.github/images/image3.png)
+
 ## Installation
 
 You can install the package via composer:
