@@ -18,11 +18,11 @@ Simple but effective solution to provide support. Due to its lightweight constru
 ## Preview
 
 Ticket list:
-![ticket list](.github/images/image1.png)
+![ticket list](.github/images/image1-d4as.png)
 Ticket creation:
-![ticket create](.github/images/image2.png)
+![ticket create](.github/images/image2-d4as.png)
 Ticket show:
-![ticket show](.github/images/image3.png)
+![ticket show](.github/images/image3-d4as.png)
 
 ## Todos
 
