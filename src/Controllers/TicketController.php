@@ -33,15 +33,15 @@ class TicketController extends Controller
      */
     public function __construct()
     {
-        if (! config('laravel-tickets::permission')) {
+        if (! config('laravel-tickets.permission')) {
             return;
         }
 
-        $this->middleware(config('laravel-tickets::permissions.list-ticket'))->only('index');
-        $this->middleware(config('laravel-tickets::permissions.create-ticket'))->only('store');
-        $this->middleware(config('laravel-tickets::permissions.close-ticket'))->only('close');
-        $this->middleware(config('laravel-tickets::permissions.show-ticket'))->only('show');
-        $this->middleware(config('laravel-tickets::permissions.message-ticket'))->only('message');
+        $this->middleware(config('laravel-tickets.permissions.list-ticket'))->only('index');
+        $this->middleware(config('laravel-tickets.permissions.create-ticket'))->only('store');
+        $this->middleware(config('laravel-tickets.permissions.close-ticket'))->only('close');
+        $this->middleware(config('laravel-tickets.permissions.show-ticket'))->only('show');
+        $this->middleware(config('laravel-tickets.permissions.message-ticket'))->only('message');
     }
 
     /**
@@ -76,7 +76,7 @@ class TicketController extends Controller
             'priority' => [ 'required', Rule::in([ 'LOW', 'MID', 'HIGH' ]) ],
             'message' => [ 'required', 'string' ]
         ]);
-        if ($request->user()->tickets()->where('state', '!=', 'CLOSED')->count() >= config('laravel-tickets::maximal-open-tickets')) {
+        if ($request->user()->tickets()->where('state', '!=', 'CLOSED')->count() >= config('laravel-tickets.maximal-open-tickets')) {
             $message = trans('You have reached the limit of open tickets');
             return \request()->wantsJson() ?
                 response()->json(compact('message')) :

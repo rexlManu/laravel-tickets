@@ -10,6 +10,7 @@ return [
     'files' => true,
 
     'user' => App\Models\User::class,
+    'guard' => [ 'web', 'auth' ],
 
     'database' => [
         'users-table' => 'users',

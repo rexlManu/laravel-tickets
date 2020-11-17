@@ -19,7 +19,7 @@ composer require rexlmanu/laravel-tickets
 
 After the installation
 ```bash
-php artisan vendor:publish --tag="laravel-tickets"
+php artisan vendor:publish --provider=RexlManu\LaravelTickets\LaravelTicketsServiceProvider
 ```
 
 ## Documentation

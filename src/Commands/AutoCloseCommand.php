@@ -40,7 +40,7 @@ class AutoCloseCommand extends Command
      */
     public function handle()
     {
-        $tickets = Ticket::query()->where('updated_at', '<', Carbon::now()->subDays(config('laravel-tickets::autoclose-days')));
+        $tickets = Ticket::query()->where('updated_at', '<', Carbon::now()->subDays(config('laravel-tickets.autoclose-days')));
         $tickets->update(['state' => 'CLOSED']);
         $tickets->get()->each(function ($ticket) {
             event(new TicketCloseEvent($ticket));

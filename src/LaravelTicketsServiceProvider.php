@@ -15,7 +15,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
         /*
          * Optional methods to load your package assets
          */
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-tickets');
+//        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-tickets');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-tickets');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
@@ -30,15 +30,19 @@ class LaravelTicketsServiceProvider extends ServiceProvider
                 __DIR__ . '/../resources/views' => resource_path('views/vendor/laravel-tickets'),
             ], 'views');
 
+            $this->publishes([
+                __DIR__ . '/../database/migrations' => resource_path('views/vendor/laravel-tickets'),
+            ], 'migrations');
+
             // Publishing assets.
             /*$this->publishes([
                 __DIR__.'/../resources/assets' => public_path('vendor/laravel-tickets'),
             ], 'assets');*/
 
             // Publishing the translation files.
-            $this->publishes([
-                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-tickets'),
-            ], 'lang');
+//            $this->publishes([
+//                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-tickets'),
+//            ], 'lang');
 
             // Registering package commands.
             $this->commands([ AutoCloseCommand::class ]);
