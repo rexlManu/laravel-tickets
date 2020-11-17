@@ -17,9 +17,8 @@ class Tickets extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('subject');
-            $table->enum('priority', [ 'LOW', 'MID', 'HIGH' ]);
+            $table->enum('priority', [ 'LOW', 'MEDIUM', 'HIGH' ]);
             $table->enum('state', [ 'OPEN', 'ANSWERED', 'CLOSED' ])->default('OPEN');
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
@@ -30,7 +29,6 @@ class Tickets extends Migration
             $table->unsignedBigInteger('ticket_id');
             $table->unsignedBigInteger('user_id');
             $table->text('message');
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');

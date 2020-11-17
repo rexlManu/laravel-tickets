@@ -31,7 +31,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
             ], 'views');
 
             $this->publishes([
-                __DIR__ . '/../database/migrations' => resource_path('views/vendor/laravel-tickets'),
+                __DIR__ . '/../database/migrations' => database_path('migrations'),
             ], 'migrations');
 
             // Publishing assets.

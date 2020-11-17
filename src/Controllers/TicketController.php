@@ -38,7 +38,7 @@ class TicketController extends Controller
         }
 
         $this->middleware(config('laravel-tickets.permissions.list-ticket'))->only('index');
-        $this->middleware(config('laravel-tickets.permissions.create-ticket'))->only('store');
+        $this->middleware(config('laravel-tickets.permissions.create-ticket'))->only('store', 'create');
         $this->middleware(config('laravel-tickets.permissions.close-ticket'))->only('close');
         $this->middleware(config('laravel-tickets.permissions.show-ticket'))->only('show');
         $this->middleware(config('laravel-tickets.permissions.message-ticket'))->only('message');
@@ -53,13 +53,23 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = request()->user()->tickets()->get();
+        $tickets = request()->user()->tickets()->orderBy('id', 'desc')->paginate(10);
 
         return request()->wantsJson() ?
             response()->json(compact('tickets')) :
             view('laravel-tickets::tickets.index',
                 compact('tickets')
             );
+    }
+
+    /**
+     * Show the create form
+     *
+     * @return View
+     */
+    public function create()
+    {
+        return view('laravel-tickets::tickets.create');
     }
 
     /**
@@ -99,7 +109,7 @@ class TicketController extends Controller
         return $request->wantsJson() ?
             response()->json(compact('message', 'ticket', 'ticketMessage')) :
             redirect(route(
-                'laravel-tickets::tickets.show',
+                'laravel-tickets.tickets.show',
                 compact('ticket')
             ))->with(
                 'message',
@@ -116,11 +126,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        if ($ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user())) {
             return abort(403);
         }
 
-        $messages = $ticket->messages()->get();
+        $messages = $ticket->messages()->orderBy('created_at', 'desc')->paginate(4);
 
         return \request()->wantsJson() ?
             response()->json(compact(
@@ -145,8 +155,18 @@ class TicketController extends Controller
      */
     public function message(Request $request, Ticket $ticket)
     {
-        if ($ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user())) {
             return abort(403);
+        }
+
+        if (! config('laravel-tickets.open-ticket-with-answer') && $ticket->state === 'CLOSED') {
+            $message = trans('You cannot reply to a closed ticket');
+            return \request()->wantsJson() ?
+                response()->json(compact('message')) :
+                back()->with(
+                    'message',
+                    $message
+                );
         }
 
         $data = $request->validate([
@@ -180,7 +200,7 @@ class TicketController extends Controller
      */
     public function close(Ticket $ticket)
     {
-        if ($ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user())) {
             return abort(403);
         }
         if ($ticket->state === 'CLOSED') {

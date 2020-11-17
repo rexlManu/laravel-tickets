@@ -28,6 +28,16 @@ return [
     'autoclose-days' => 7,
 
     /*
+     * User can reopen a ticket with a answer
+     */
+    'open-ticket-with-answer' => true,
+
+    /*
+     * Date format
+     */
+    'datetime-format' => 'H:i d.m.Y',
+
+    /*
      * Activate permission support
      */
     'permission' => false,
