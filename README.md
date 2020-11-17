@@ -7,6 +7,14 @@
 
 Simple but effective solution to provide support. Due to its lightweight construction, it fits into any project. In addition, it offers a wide range of configuration options from the start and is therefore suitable for any area.
 
+## Features
+
+- Highly configurable
+- auto closing
+- file upload support
+- permission support
+- easy to customize
+
 ## Preview
 
 Ticket list:
@@ -18,7 +26,6 @@ Ticket show:
 
 ## Todos
 
-- File uploads
 - model reference support
 - tailwind and vue frontend
 - admin ticket scaffold
