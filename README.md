@@ -13,7 +13,9 @@ Simple but effective solution to provide support. Due to its lightweight constru
 - auto closing
 - file upload support
 - permission support
+- ticket categories
 - easy to customize
+- uuid support
 
 ## Preview
 
