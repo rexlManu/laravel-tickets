@@ -16,7 +16,7 @@ class CreateTicketsTable extends Migration
         Schema::create(config('laravel-tickets.database.tickets-table'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('subject');
             $table->enum('priority', config('laravel-tickets.priorities'));
             $table->enum('state', [ 'OPEN', 'ANSWERED', 'CLOSED' ])->default('OPEN');
