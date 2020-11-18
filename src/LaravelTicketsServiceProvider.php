@@ -7,6 +7,12 @@ use RexlManu\LaravelTickets\Commands\AutoCloseCommand;
 use RexlManu\LaravelTickets\Controllers\TicketController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use RexlManu\LaravelTickets\Models\Ticket;
+use RexlManu\LaravelTickets\Models\TicketMessage;
+use RexlManu\LaravelTickets\Models\TicketUpload;
+use RexlManu\LaravelTickets\Observers\TicketMessageObserver;
+use RexlManu\LaravelTickets\Observers\TicketObserver;
+use RexlManu\LaravelTickets\Observers\TicketUploadObserver;
 
 class LaravelTicketsServiceProvider extends ServiceProvider
 {
@@ -22,6 +28,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-tickets');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->routes();
+        $this->observers();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -88,5 +95,12 @@ class LaravelTicketsServiceProvider extends ServiceProvider
                 });
             });
         }
+    }
+
+    private function observers()
+    {
+        Ticket::observe(TicketObserver::class);
+        TicketMessage::observe(TicketMessageObserver::class);
+        TicketUpload::observe(TicketUploadObserver::class);
     }
 }

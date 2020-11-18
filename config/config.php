@@ -99,5 +99,17 @@ return [
     /*
      * Force pdf to preview instead to download
      */
-    'pdf-force-preview' => true
+    'pdf-force-preview' => true,
+
+    /*
+     * Use uuids instead of unsigned integers
+     */
+    'models' => [
+        'incrementing' => true,
+        'key-type' => 'int',
+        /*
+         * If you use uuids for your database, please adjust the structure in the migration itself, because everybody works differently
+         */
+        'uuid' => false
+    ]
 ];

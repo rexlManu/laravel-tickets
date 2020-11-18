@@ -114,7 +114,7 @@ class TicketController extends Controller
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
 
-        $this->handleFiles($data[ 'files' ], $ticketMessage);
+        $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
 
         event(new TicketOpenEvent($ticket));
 
@@ -199,7 +199,7 @@ class TicketController extends Controller
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
 
-        $this->handleFiles($data[ 'files' ], $ticketMessage);
+        $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
 
         $ticket->update([ 'state' => 'OPEN' ]);
 

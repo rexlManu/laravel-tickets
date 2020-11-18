@@ -5,14 +5,22 @@ namespace RexlManu\LaravelTickets\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use RexlManu\LaravelTickets\Traits\HasConfigModel;
 
 class Ticket extends Model
 {
+    use HasConfigModel;
+
     protected $fillable = [
         'subject',
         'priority',
         'state'
     ];
+
+    public function getTable()
+    {
+        return config('laravel-tickets.database.tickets-table');
+    }
 
     public function messages()
     {

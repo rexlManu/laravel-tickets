@@ -5,17 +5,26 @@ namespace RexlManu\LaravelTickets\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use RexlManu\LaravelTickets\Traits\HasConfigModel;
 
 class TicketMessage extends Model
 {
+
+    use HasConfigModel;
 
     protected $fillable = [
         'message'
     ];
 
+    public function getTable()
+    {
+        return config('laravel-tickets.database.ticket-messages-table');
+    }
+
+
     public function ticket()
     {
-        return $this->belongsTo(Ticket::class);
+        return $this->belongsTo(Ticket::class, 'ticket_id');
     }
 
     public function user()

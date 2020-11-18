@@ -21,7 +21,9 @@ class CreateTicketsTable extends Migration
             $table->enum('state', [ 'OPEN', 'ANSWERED', 'CLOSED' ])->default('OPEN');
             $table->timestamps();
 
-            $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
+            if (! config('laravel-tickets.models.uuid')) {
+                $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
+            }
         });
 
         Schema::create(config('laravel-tickets.database.ticket-messages-table'), function (Blueprint $table) {
@@ -31,8 +33,10 @@ class CreateTicketsTable extends Migration
             $table->text('message');
             $table->timestamps();
 
-            $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
-            $table->foreign('ticket_id')->on(config('laravel-tickets.database.tickets-table'))->references('id');
+            if (! config('laravel-tickets.models.uuid')) {
+                $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
+                $table->foreign('ticket_id')->on(config('laravel-tickets.database.tickets-table'))->references('id');
+            }
         });
 
         Schema::create(config('laravel-tickets.database.ticket-uploads-table'), function (Blueprint $table) {
@@ -41,7 +45,9 @@ class CreateTicketsTable extends Migration
             $table->string('path');
             $table->timestamps();
 
-            $table->foreign('ticket_message_id')->on(config('laravel-tickets.database.ticket-messages-table'))->references('id');
+            if (! config('laravel-tickets.models.uuid')) {
+                $table->foreign('ticket_message_id')->on(config('laravel-tickets.database.ticket-messages-table'))->references('id');
+            }
         });
     }
 
