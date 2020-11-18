@@ -60,7 +60,12 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = request()->user()->tickets()->orderBy('id', 'desc')->paginate(10);
+        if (\request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
+            $tickets = Ticket::query();
+        } else {
+            $tickets = request()->user()->tickets();
+        }
+        $tickets = $tickets->orderBy('id', 'desc')->paginate(10);
 
         return request()->wantsJson() ?
             response()->json(compact('tickets')) :
@@ -166,7 +171,8 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user()) &&
+            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
             return abort(403);
         }
 
@@ -196,7 +202,8 @@ class TicketController extends Controller
      */
     public function message(Request $request, Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user()) &&
+            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
             return abort(403);
         }
 
@@ -250,7 +257,8 @@ class TicketController extends Controller
      */
     public function close(Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user())) {
+        if (! $ticket->user()->get()->contains(\request()->user()) &&
+            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
             return abort(403);
         }
         if ($ticket->state === 'CLOSED') {
@@ -285,8 +293,8 @@ class TicketController extends Controller
      */
     public function download(Ticket $ticket, TicketUpload $ticketUpload)
     {
-        if (! $ticket->user()->get()->contains(\request()->user()) ||
-            ! $ticket->messages()->get()->contains($ticketUpload->message()->first())) {
+        if (! $ticket->user()->get()->contains(\request()->user()) &&
+            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
             return abort(403);
         }
 

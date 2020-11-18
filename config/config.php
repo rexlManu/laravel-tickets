@@ -88,6 +88,10 @@ return [
         'show-ticket' => 'can:tickets.show',
         'message-ticket' => 'can:tickets.message',
         'download-ticket' => 'can:tickets.download',
+        /*
+         * For administrate tickets
+         */
+        'all-ticket' => 'can:tickets.all',
     ],
 
     /*
