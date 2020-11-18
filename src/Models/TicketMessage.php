@@ -21,7 +21,6 @@ class TicketMessage extends Model
         return config('laravel-tickets.database.ticket-messages-table');
     }
 
-
     public function ticket()
     {
         return $this->belongsTo(Ticket::class, 'ticket_id');

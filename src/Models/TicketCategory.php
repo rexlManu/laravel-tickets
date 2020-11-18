@@ -11,4 +11,13 @@ class TicketCategory extends Model
 {
 
     use HasConfigModel;
+
+    protected $fillable = [
+        'translation'
+    ];
+
+    public function getTable()
+    {
+        return config('laravel-tickets.database.ticket-categories-table');
+    }
 }

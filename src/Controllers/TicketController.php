@@ -85,7 +85,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $rules = [
             'subject' => [ 'required', 'string', 'max:191' ],
             'priority' => [ 'required', Rule::in(config('laravel-tickets.priorities')) ],
             'message' => [ 'required', 'string' ],
@@ -95,8 +95,15 @@ class TicketController extends Controller
                 'file',
                 'max:' . config('laravel-tickets.file.size-limit'),
                 'mimes:' . config('laravel-tickets.file.memes'),
-            ]
-        ]);
+            ],
+        ];
+        if (config('laravel-tickets.category')) {
+            $rules[ 'category_id' ] = [
+                'required',
+                Rule::exists(config('laravel-tickets.database.ticket-categories-table'), 'id'),
+            ];
+        }
+        $data = $request->validate($rules);
         if ($request->user()->tickets()->where('state', '!=', 'CLOSED')->count() >= config('laravel-tickets.maximal-open-tickets')) {
             $message = trans('You have reached the limit of open tickets');
             return \request()->wantsJson() ?

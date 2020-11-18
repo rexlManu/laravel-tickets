@@ -14,7 +14,8 @@ class Ticket extends Model
     protected $fillable = [
         'subject',
         'priority',
-        'state'
+        'state',
+        'category_id'
     ];
 
     public function getTable()

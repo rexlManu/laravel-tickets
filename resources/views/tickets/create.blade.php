@@ -7,11 +7,32 @@
         </div>
         <div class="card-body">
             @includeWhen(session()->has('message'), 'laravel-tickets::alert', ['type' => 'info', 'message' => session()->get('message')])
-            <form method="post" action="{{ route('laravel-tickets.tickets.store') }}" @if (config('laravel-tickets.files'))
-                enctype="multipart/form-data"
-            @endif>
+            <form method="post" action="{{ route('laravel-tickets.tickets.store') }}"
+                  @if (config('laravel-tickets.files'))
+                  enctype="multipart/form-data"
+                @endif>
                 @csrf
                 <div class="row">
+                    @if (config('laravel-tickets.category'))
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>@lang('Category')</label>
+                                <select class="form-control @error('category_id') is-invalid @enderror"
+                                        name="category_id">
+                                    @foreach (\RexlManu\LaravelTickets\Models\TicketCategory::all() as $ticketCategory)
+
+                                        <option value="{{ $ticketCategory->id }}"
+                                                @if (old('category_id') === $ticketCategory->id)
+                                                selected
+                                            @endif>@lang($ticketCategory->translation)</option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-4">
                         <div class="form-group">
                             <label>@lang('Priority')</label>

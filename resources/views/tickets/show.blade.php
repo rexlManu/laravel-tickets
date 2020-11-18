@@ -84,6 +84,13 @@
                     @lang('Ticket overview')
                 </div>
                 <div class="card-body">
+                    @if (config('laravel-tickets.category') && $ticket->category()->exists())
+                        <div class="form-group">
+                            <label>@lang('Category'):</label>
+                            <input class="form-control" type="text"
+                                   value="{{ $ticket->category()->first()->translation }}" disabled>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label>@lang('Subject'):</label>
                         <input class="form-control" type="text" value="{{ $ticket->subject }}" disabled>
