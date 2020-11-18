@@ -95,5 +95,9 @@ return [
     /*
      * Layout view
      */
-    'layouts' => 'layouts.app'
+    'layouts' => 'layouts.app',
+    /*
+     * Force pdf to preview instead to download
+     */
+    'pdf-force-preview' => true
 ];

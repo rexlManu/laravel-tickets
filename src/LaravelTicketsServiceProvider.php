@@ -21,6 +21,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
 //        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-tickets');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-tickets');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->routes();
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -49,25 +50,6 @@ class LaravelTicketsServiceProvider extends ServiceProvider
             // Registering package commands.
             $this->commands([ AutoCloseCommand::class ]);
         }
-        
-        // Macro routing improved
-        Router::macro('ticketSystem', function () {
-            Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () {
-                Route::prefix('/tickets')->group(function () {
-                    Route::get('/', [ TicketController::class, 'index' ])->name('tickets.index');
-                    Route::post('/', [ TicketController::class, 'store' ])->name('tickets.store');
-                    Route::get('/create', [ TicketController::class, 'create' ])->name('tickets.create');
-                    Route::prefix('{ticket}')->group(function () {
-                        Route::get('/', [ TicketController::class, 'show' ])->name('tickets.show');
-                        Route::post('/', [ TicketController::class, 'close' ])->name('tickets.close');
-                        Route::post('/message', [ TicketController::class, 'message' ])->name('tickets.message');
-                        Route::prefix('{ticketUpload}')->group(function () {
-                            Route::get('/download', [ TicketController::class, 'download' ])->name('tickets.download');
-                        });
-                    });
-                });
-            });
-        });
     }
 
     /**
@@ -82,5 +64,29 @@ class LaravelTicketsServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-tickets', function () {
             return new LaravelTickets;
         });
+    }
+
+    public function routes()
+    {
+        // Macro routing
+        foreach ([ 'ticketSystem', 'tickets' ] as $routeMacroName) {
+            Router::macro($routeMacroName, function () {
+                Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () {
+                    Route::prefix('/tickets')->group(function () {
+                        Route::get('/', [ TicketController::class, 'index' ])->name('tickets.index');
+                        Route::post('/', [ TicketController::class, 'store' ])->name('tickets.store');
+                        Route::get('/create', [ TicketController::class, 'create' ])->name('tickets.create');
+                        Route::prefix('{ticket}')->group(function () {
+                            Route::get('/', [ TicketController::class, 'show' ])->name('tickets.show');
+                            Route::post('/', [ TicketController::class, 'close' ])->name('tickets.close');
+                            Route::post('/message', [ TicketController::class, 'message' ])->name('tickets.message');
+                            Route::prefix('{ticketUpload}')->group(function () {
+                                Route::get('/download', [ TicketController::class, 'download' ])->name('tickets.download');
+                            });
+                        });
+                    });
+                });
+            });
+        }
     }
 }

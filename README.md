@@ -56,6 +56,11 @@ class User
 }
 ```
 
+The ticket routes can be implemented via the macro
+```php
+Route::tickets();
+```
+
 Config: All points of the configuration are documented.
 
 ### Testing

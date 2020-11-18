@@ -263,7 +263,12 @@ class TicketController extends Controller
             return abort(403);
         }
 
-        return response()->download(storage_path('app/'.$ticketUpload->path));
+        $storagePath = storage_path('app/' . $ticketUpload->path);
+        if (config('laravel-tickets.pdf-force-preview') && pathinfo($ticketUpload->path, PATHINFO_EXTENSION) === 'pdf') {
+            return response()->file($storagePath);
+        }
+
+        return response()->download($storagePath);
     }
 
     /**
