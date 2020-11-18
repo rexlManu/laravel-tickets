@@ -33,6 +33,33 @@
                             </div>
                         </div>
                     @endif
+                    @if (config('laravel-tickets.references'))
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>@lang('Reference')</label>
+                                <select class="form-control @error('reference') is-invalid @enderror"
+                                        name="reference">
+                                    @if (config('laravel-tickets.references-nullable'))
+                                        <option value="">@lang('No reference')</option>
+                                    @endif
+                                    @foreach (config('laravel-tickets.reference-models') as $modelClass)
+                                        @foreach (resolve($modelClass)->all() as $model)
+                                            @if (!$model->hasReferenceAccess())
+                                                @continue
+                                            @endif
+                                            <option value="{{ $model->toReference() }}"
+                                                    @if (old('reference') === $model->toReference())
+                                                    selected
+                                                @endif>@lang(basename(get_class($model))) #{{$model->id}}</option>
+                                        @endforeach
+                                    @endforeach
+                                </select>
+                                @error('reference')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-4">
                         <div class="form-group">
                             <label>@lang('Priority')</label>

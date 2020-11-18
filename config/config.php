@@ -50,7 +50,8 @@ return [
         'tickets-table' => 'tickets',
         'ticket-messages-table' => 'ticket_messages',
         'ticket-uploads-table' => 'ticket_uploads',
-        'ticket-categories-table' => 'ticket_categories'
+        'ticket-categories-table' => 'ticket_categories',
+        'ticket-references-table' => 'ticket_references'
     ],
 
     /*
@@ -117,5 +118,14 @@ return [
     /*
      * Enable categories for tickets
      */
-    'category' => true
+    'category' => true,
+    /*
+     * Enable references for tickets
+     */
+    'references' => true,
+    'references-nullable' => true,
+    /*
+     * Ether you define your models for references or customize the view.
+     */
+    'reference-models' => []
 ];

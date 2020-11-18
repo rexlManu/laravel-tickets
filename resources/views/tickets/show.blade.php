@@ -91,6 +91,14 @@
                                    value="{{ $ticket->category()->first()->translation }}" disabled>
                         </div>
                     @endif
+                    @if (config('laravel-tickets.references') && $ticket->reference()->exists())
+                        <div class="form-group">
+                            <label>@lang('Reference'):</label>
+                            @php($referenceable = $ticket->reference->referenceable)
+                            <input class="form-control" type="text"
+                                   value="@lang(basename(get_class($referenceable))) #{{$referenceable->id}}" disabled>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label>@lang('Subject'):</label>
                         <input class="form-control" type="text" value="{{ $ticket->subject }}" disabled>

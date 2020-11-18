@@ -4,6 +4,7 @@
 namespace RexlManu\LaravelTickets\Controllers;
 
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,9 @@ use RexlManu\LaravelTickets\Events\TicketMessageEvent;
 use RexlManu\LaravelTickets\Events\TicketOpenEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
+use RexlManu\LaravelTickets\Models\TicketReference;
 use RexlManu\LaravelTickets\Models\TicketUpload;
+use RexlManu\LaravelTickets\Rule\TicketReferenceRule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -103,6 +106,12 @@ class TicketController extends Controller
                 Rule::exists(config('laravel-tickets.database.ticket-categories-table'), 'id'),
             ];
         }
+        if (config('laravel-tickets.references')) {
+            $rules[ 'reference' ] = [
+                config('laravel-tickets.references-nullable') ? 'nullable' : 'required',
+                new TicketReferenceRule(),
+            ];
+        }
         $data = $request->validate($rules);
         if ($request->user()->tickets()->where('state', '!=', 'CLOSED')->count() >= config('laravel-tickets.maximal-open-tickets')) {
             $message = trans('You have reached the limit of open tickets');
@@ -116,6 +125,17 @@ class TicketController extends Controller
         $ticket = $request->user()->tickets()->create(
             $data
         );
+
+        if (array_key_exists('reference', $data)) {
+            $reference = explode(',', $data[ 'reference' ]);
+            $ticketReference = new TicketReference();
+            $ticketReference->ticket()->associate($ticket);
+            $ticketReference->referenceable()->associate(
+                resolve($reference[ 0 ])->find($reference[ 1 ])
+            );
+            $ticketReference->save();
+        }
+
         $ticketMessage = new TicketMessage($data);
         $ticketMessage->user()->associate($request->user());
         $ticketMessage->ticket()->associate($ticket);

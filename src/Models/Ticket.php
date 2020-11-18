@@ -38,6 +38,11 @@ class Ticket extends Model
         return $this->belongsTo(TicketCategory::class);
     }
 
+    public function reference()
+    {
+        return $this->hasOne(TicketReference::class);
+    }
+
     public function scopeState($query, $state)
     {
         return $query->where('state', $state);
