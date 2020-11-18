@@ -32,6 +32,11 @@ class Ticket extends Model
         return $this->belongsTo(config('laravel-tickets.user'));
     }
 
+    public function category()
+    {
+        return $this->belongsTo(TicketCategory::class);
+    }
+
     public function scopeState($query, $state)
     {
         return $query->where('state', $state);

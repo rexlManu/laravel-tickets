@@ -112,5 +112,10 @@ return [
          * If you use uuids for your database, please adjust the structure in the migration itself, because everybody works differently
          */
         'uuid' => false
-    ]
+    ],
+
+    /*
+     * Enable categories for tickets
+     */
+    'category' => true
 ];
