@@ -16,13 +16,17 @@ class CreateTicketsTable extends Migration
         Schema::create(config('laravel-tickets.database.tickets-table'), function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('subject');
             $table->enum('priority', config('laravel-tickets.priorities'));
             $table->enum('state', [ 'OPEN', 'ANSWERED', 'CLOSED' ])->default('OPEN');
             $table->timestamps();
 
             if (! config('laravel-tickets.models.uuid')) {
-                $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
+                $table->foreign('user_id')
+                    ->on(config('laravel-tickets.database.users-table'))->references('id');
+                $table->foreign('category_id')
+                    ->on(config('laravel-tickets.database.ticket-categories-table'))->references('id');
             }
         });
 
@@ -34,8 +38,10 @@ class CreateTicketsTable extends Migration
             $table->timestamps();
 
             if (! config('laravel-tickets.models.uuid')) {
-                $table->foreign('user_id')->on(config('laravel-tickets.database.users-table'))->references('id');
-                $table->foreign('ticket_id')->on(config('laravel-tickets.database.tickets-table'))->references('id');
+                $table->foreign('user_id')
+                    ->on(config('laravel-tickets.database.users-table'))->references('id');
+                $table->foreign('ticket_id')
+                    ->on(config('laravel-tickets.database.tickets-table'))->references('id');
             }
         });
 
@@ -46,8 +52,16 @@ class CreateTicketsTable extends Migration
             $table->timestamps();
 
             if (! config('laravel-tickets.models.uuid')) {
-                $table->foreign('ticket_message_id')->on(config('laravel-tickets.database.ticket-messages-table'))->references('id');
+                $table->foreign('ticket_message_id')
+                    ->on(config('laravel-tickets.database.ticket-messages-table'))->references('id');
             }
+        });
+
+        Schema::create(config('laravel-tickets.database.ticket-categories-table'), function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('translation');
+            $table->timestamps();
         });
     }
 
@@ -61,5 +75,6 @@ class CreateTicketsTable extends Migration
         Schema::dropIfExists(config('laravel-tickets.database.tickets-table'));
         Schema::dropIfExists(config('laravel-tickets.database.ticket-messages-table'));
         Schema::dropIfExists(config('laravel-tickets.database.ticket-uploads-table'));
+        Schema::dropIfExists(config('laravel-tickets.database.ticket-categories-table'));
     }
 }

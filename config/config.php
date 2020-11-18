@@ -49,7 +49,8 @@ return [
         'users-table' => 'users',
         'tickets-table' => 'tickets',
         'ticket-messages-table' => 'ticket_messages',
-        'ticket-uploads-table' => 'ticket_uploads'
+        'ticket-uploads-table' => 'ticket_uploads',
+        'ticket-categories-table' => 'ticket_categories'
     ],
 
     /*
