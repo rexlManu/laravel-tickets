@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8">
             @includeWhen(session()->has('message'), 'laravel-tickets::alert', ['type' => 'info', 'message' => session()->get('message')])
 
             @if (config('laravel-tickets.open-ticket-with-answer') || $ticket->state !== 'CLOSED')
@@ -22,8 +22,13 @@
                             @if (config('laravel-tickets.files'))
                                 <div class="custom-file mt-2">
                                     <input type="file" name="files[]" multiple
-                                           class="custom-file-input @error('files') is-invalid @enderror" id="files">
+                                           class="custom-file-input @error('files') is-invalid @enderror {{ empty($errors->get('files.*'))?'':'is-invalid' }}"
+                                           id="files">
                                     <label class="custom-file-label" for="files">@lang('Choose files')</label>
+                                    @foreach($errors->get('files.*') as $value)
+                                        <div class="invalid-feedback">{{ $value[0] }}</div>
+                                    @endforeach
+
                                     @error('files')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -74,7 +79,7 @@
                 {!! $messages->links('pagination::bootstrap-4') !!}
             </div>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4">
             <div class="card">
                 <div class="card-header">
                     @lang('Ticket overview')
@@ -117,6 +122,30 @@
                     @endif
                 </div>
             </div>
+
+            <ul class="nav nav-pills mb mt-2" id="pills-tab">
+                @if (config('laravel-tickets.list.users'))
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-users-tab" data-toggle="pill"
+                           href="#pills-users">@lang('Users')</a>
+                    </li>
+                @endif
+                @if (config('laravel-tickets.list.files'))
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-files-tab" data-toggle="pill"
+                           href="#pills-files">@lang('Files')</a>
+                    </li>
+                @endif
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade" id="pills-users">
+                    @include('laravel-tickets::tickets.partials.users', compact('ticket'))
+                </div>
+                <div class="tab-pane fade" id="pills-files">
+                    @include('laravel-tickets::tickets.partials.files', compact('ticket'))
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection

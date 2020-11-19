@@ -132,5 +132,12 @@ return [
      * Ether you define your models for references or customize the view.
      * Example: [App/Models/User::class]
      */
-    'reference-models' => []
+    'reference-models' => [],
+    /*
+     * Should be listed?
+     */
+    'list' => [
+        'users' => false,
+        'files' => false
+    ]
 ];
