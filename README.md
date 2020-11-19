@@ -107,6 +107,7 @@ If you discover any security related issues, please email rexlmanude@gmail.com i
 ## Credits
 
 - [Emmanuel Lampe](https://github.com/rexlmanu)
+- [René Roscher](https://github.com/rene-roscher)
 - [All Contributors](../../contributors)
 
 ## License
