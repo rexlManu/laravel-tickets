@@ -130,6 +130,7 @@ return [
     'references-nullable' => true,
     /*
      * Ether you define your models for references or customize the view.
+     * Example: [App/Models/User::class]
      */
     'reference-models' => []
 ];

@@ -92,7 +92,7 @@
                             <label>@lang('Reference'):</label>
                             @php($referenceable = $ticket->reference->referenceable)
                             <input class="form-control" type="text"
-                                   value="@lang(basename(get_class($referenceable))) #{{$referenceable->id}}" disabled>
+                                   value="{{ $referenceable->toReference() }}" disabled>
                         </div>
                     @endif
                     <div class="form-group">

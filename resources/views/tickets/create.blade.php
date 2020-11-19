@@ -47,10 +47,11 @@
                                             @if (!$model->hasReferenceAccess())
                                                 @continue
                                             @endif
-                                            <option value="{{ $model->toReference() }}"
-                                                    @if (old('reference') === $model->toReference())
-                                                    selected
-                                                @endif>@lang(basename(get_class($model))) #{{$model->id}}</option>
+                                            <option
+                                                value="{{ $modelReference = \RexlManu\LaravelTickets\Helper\ReferenceHelper::modelToReference($model) }}"
+                                                @if (old('reference') === $modelReference)
+                                                selected
+                                                @endif>{{ $model->toReference() }}</option>
                                         @endforeach
                                     @endforeach
                                 </select>

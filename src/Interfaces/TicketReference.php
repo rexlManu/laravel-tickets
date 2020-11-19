@@ -15,7 +15,7 @@ interface TicketReference
     function hasReferenceAccess() : bool;
 
     /**
-     * Combine type and id to a string for forms
+     * Show the name when on selection
      *
      * @return string
      */

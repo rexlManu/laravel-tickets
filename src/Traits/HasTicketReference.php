@@ -9,8 +9,8 @@ trait HasTicketReference
 
     public function toReference() : string
     {
-        $type = get_class($this);
-        return "$type,$this->id";
+        $type = basename(get_class($this));
+        return "$type #$this->id";
     }
 
 }
