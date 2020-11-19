@@ -12,9 +12,7 @@
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('laravel-tickets.tickets.message', compact('ticket')) }}"
-                              @if (config('laravel-tickets.files'))
-                              enctype="multipart/form-data"
-                            @endif>
+                              @if (config('laravel-tickets.files')) enctype="multipart/form-data" @endif>
                             @csrf
                             <textarea class="form-control @error('message') is-invalid @enderror"
                                       placeholder="@lang('Message')" name="message">{{ old('message') }}</textarea>
@@ -39,9 +37,7 @@
             @endif
 
             @foreach ($messages as $message)
-                <div class="card @if (! $loop->first)
-                    mt-2
-@endif">
+                <div class="card @if (! $loop->first) mt-2 @endif">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
@@ -57,8 +53,8 @@
                             {!! nl2br(e($message->message)) !!}
                         </div>
                     </div>
-                    <div class="card-body border-top p-1">
-                        @if ($message->uploads()->count() > 0)
+                    @if ($message->uploads()->count() > 0)
+                        <div class="card-body border-top p-1">
                             <div class="row mt-1 mb-2 pr-2 pl-2">
                                 @foreach ($message->uploads()->get() as $ticketUpload)
                                     <div class="col">
@@ -68,8 +64,8 @@
                                     </div>
                                 @endforeach
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
 
                 </div>
             @endforeach

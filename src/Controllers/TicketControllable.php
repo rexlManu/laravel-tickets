@@ -4,11 +4,9 @@
 namespace RexlManu\LaravelTickets\Controllers;
 
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use RexlManu\LaravelTickets\Events\TicketCloseEvent;
@@ -30,11 +28,11 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  *
  * @package RexlManu\LaravelTickets\Controllers
  */
-class TicketController extends Controller
+trait TicketControllable
 {
 
     /**
-     * @link TicketController constructor
+     * @link TicketControllable constructor
      */
     public function __construct()
     {

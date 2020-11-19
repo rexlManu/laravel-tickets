@@ -4,7 +4,7 @@ namespace RexlManu\LaravelTickets;
 
 use Illuminate\Support\ServiceProvider;
 use RexlManu\LaravelTickets\Commands\AutoCloseCommand;
-use RexlManu\LaravelTickets\Controllers\TicketController;
+use RexlManu\LaravelTickets\Controllers\TicketControllable;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use RexlManu\LaravelTickets\Models\Ticket;
@@ -24,7 +24,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
         /*
          * Optional methods to load your package assets
          */
-//        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-tickets');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-tickets');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-tickets');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->routes();
@@ -50,9 +50,9 @@ class LaravelTicketsServiceProvider extends ServiceProvider
             ], 'assets');*/
 
             // Publishing the translation files.
-//            $this->publishes([
-//                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-tickets'),
-//            ], 'lang');
+            $this->publishes([
+                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-tickets'),
+            ], 'lang');
 
             // Registering package commands.
             $this->commands([ AutoCloseCommand::class ]);
@@ -77,18 +77,18 @@ class LaravelTicketsServiceProvider extends ServiceProvider
     {
         // Macro routing
         foreach ([ 'ticketSystem', 'tickets' ] as $routeMacroName) {
-            Router::macro($routeMacroName, function () {
-                Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () {
-                    Route::prefix('/tickets')->group(function () {
-                        Route::get('/', [ TicketController::class, 'index' ])->name('tickets.index');
-                        Route::post('/', [ TicketController::class, 'store' ])->name('tickets.store');
-                        Route::get('/create', [ TicketController::class, 'create' ])->name('tickets.create');
-                        Route::prefix('{ticket}')->group(function () {
-                            Route::get('/', [ TicketController::class, 'show' ])->name('tickets.show');
-                            Route::post('/', [ TicketController::class, 'close' ])->name('tickets.close');
-                            Route::post('/message', [ TicketController::class, 'message' ])->name('tickets.message');
-                            Route::prefix('{ticketUpload}')->group(function () {
-                                Route::get('/download', [ TicketController::class, 'download' ])->name('tickets.download');
+            Router::macro($routeMacroName, function ($controller) {
+                Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () use ($controller) {
+                    Route::prefix('/tickets')->group(function () use ($controller) {
+                        Route::get('/', [ $controller, 'index' ])->name('tickets.index');
+                        Route::post('/', [ $controller, 'store' ])->name('tickets.store');
+                        Route::get('/create', [ $controller, 'create' ])->name('tickets.create');
+                        Route::prefix('{ticket}')->group(function () use ($controller) {
+                            Route::get('/', [ $controller, 'show' ])->name('tickets.show');
+                            Route::post('/', [ $controller, 'close' ])->name('tickets.close');
+                            Route::post('/message', [ $controller, 'message' ])->name('tickets.message');
+                            Route::prefix('{ticketUpload}')->group(function () use ($controller) {
+                                Route::get('/download', [ $controller, 'download' ])->name('tickets.download');
                             });
                         });
                     });

@@ -60,8 +60,33 @@ class User
 
 The ticket routes can be implemented via the macro
 ```php
-Route::tickets();
+
+class TicketController extends Controller {
+
+  use \RexlManu\LaravelTickets\Controllers\TicketControllable;
+
+}
+
+Route::tickets( TicketController::class );
 ```
+
+For ticket referneces
+```php
+
+class ExampleModel extends Model implements \RexlManu\LaravelTickets\Interfaces\TicketReference {
+
+  use \RexlManu\LaravelTickets\Traits\HasTicketReference;
+
+  // Check if user has access to this model
+  function hasReferenceAccess() : bool {
+      return request()->user()->user_id == $this->user_id;
+  }
+
+}
+
+```
+Add this model to the list of reference models now
+and Then you should see this model as reference
 
 Config: All points of the configuration are documented.
 
