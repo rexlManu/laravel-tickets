@@ -28,10 +28,6 @@ Ticket show:
 
 ## Todos
 
-- created by in tickets table
-- logs
-- 
-
 - tailwind and vue frontend
 - admin ticket scaffold
 - unit tests
