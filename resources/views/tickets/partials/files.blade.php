@@ -1,5 +1,5 @@
 <div style="height: 28.15vh; overflow-y: scroll">
-    @foreach ($ticket->messages()->with('uploads')->get() as $message)
+    @foreach ($messages->get() as $message)
         @foreach($message->uploads()->get() as $upload)
             <div class="card mt-2">
                 <div class="card-body">

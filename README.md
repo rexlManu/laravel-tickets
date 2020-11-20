@@ -28,7 +28,10 @@ Ticket show:
 
 ## Todos
 
-- model reference support
+- created by in tickets table
+- logs
+- 
+
 - tailwind and vue frontend
 - admin ticket scaffold
 - unit tests

@@ -40,8 +40,8 @@
                     </div>
                 </div>
             @endif
-
-            @foreach ($messages as $message)
+            @php($messagesPagination = $messages->paginate(4))
+            @foreach ($messagesPagination as $message)
                 <div class="card @if (! $loop->first) mt-2 @endif">
                     <div class="card-header">
                         <div class="row">
@@ -76,7 +76,7 @@
             @endforeach
 
             <div class="mt-2 d-flex justify-content-center">
-                {!! $messages->links('pagination::bootstrap-4') !!}
+                {!! $messagesPagination->links('pagination::bootstrap-4') !!}
             </div>
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-4">
@@ -139,10 +139,10 @@
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade" id="pills-users">
-                    @include('laravel-tickets::tickets.partials.users', compact('ticket'))
+                    @include('laravel-tickets::tickets.partials.users', compact('ticket', 'messages'))
                 </div>
                 <div class="tab-pane fade" id="pills-files">
-                    @include('laravel-tickets::tickets.partials.files', compact('ticket'))
+                    @include('laravel-tickets::tickets.partials.files', compact('ticket', 'messages'))
                 </div>
             </div>
 

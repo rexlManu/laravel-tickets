@@ -63,7 +63,7 @@ trait TicketControllable
         } else {
             $tickets = request()->user()->tickets();
         }
-        $tickets = $tickets->orderBy('id', 'desc')->paginate(10);
+        $tickets = $tickets->with('user')->orderBy('id', 'desc')->paginate(10);
 
         return request()->wantsJson() ?
             response()->json(compact('tickets')) :
@@ -174,7 +174,7 @@ trait TicketControllable
             return abort(403);
         }
 
-        $messages = $ticket->messages()->with('uploads')->orderBy('created_at', 'desc')->paginate(4);
+        $messages = $ticket->messages()->with([ 'user', 'uploads' ])->orderBy('created_at', 'desc');
 
         return \request()->wantsJson() ?
             response()->json(compact(
@@ -314,7 +314,7 @@ trait TicketControllable
      */
     private function handleFiles($files, TicketMessage $ticketMessage)
     {
-        if (! config('laravel-tickets.files') || $files === null) {
+        if (! config('laravel-tickets.files') || $files == null) {
             return;
         }
         foreach ($files as $file) {

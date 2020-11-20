@@ -1,5 +1,5 @@
 <div style="height: 28.15vh; overflow-y: scroll">
-    @foreach ($ticket->messages()->whereNotIn('user_id', [$ticket->user_id])->orderBy('created_at', 'asc')->get()->unique('user_id') as $message)
+    @foreach ($messages->whereNotIn('user_id', [$ticket->user_id])->orderBy('created_at', 'asc')->get()->unique('user_id') as $message)
         <div class="card mt-2">
             <div class="card-body">
                 <div class="row justify-content-between align-items-center">

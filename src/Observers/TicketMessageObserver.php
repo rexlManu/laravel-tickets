@@ -4,11 +4,20 @@
 namespace RexlManu\LaravelTickets\Observers;
 
 
+use RexlManu\LaravelTickets\Models\TicketActivity;
 use RexlManu\LaravelTickets\Models\TicketMessage;
 use RexlManu\LaravelTickets\Models\TicketUpload;
 
 class TicketMessageObserver
 {
+
+    public function created(TicketMessage $ticketMessage)
+    {
+        $ticketActivity = new TicketActivity([ 'type' => 'ANSWER' ]);
+        $ticketActivity->ticket()->associate($ticketMessage->ticket()->first());
+        $ticketActivity->targetable()->associate($ticketMessage);
+        $ticketActivity->save();
+    }
 
     public function deleting(TicketMessage $ticketMessage)
     {

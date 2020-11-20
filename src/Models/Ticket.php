@@ -15,7 +15,7 @@ class Ticket extends Model
         'subject',
         'priority',
         'state',
-        'category_id'
+        'category_id',
     ];
 
     public function getTable()
@@ -23,9 +23,31 @@ class Ticket extends Model
         return config('laravel-tickets.database.tickets-table');
     }
 
+    /**
+     * returns every user that had sent a message in the ticket
+     *
+     * @param false $ticketCreatorIncluded if the ticket user should be included
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getRelatedUsers($ticketCreatorIncluded = false)
+    {
+        return $this
+            ->messages()
+            ->whereNotIn('user_id', $ticketCreatorIncluded ? [] : [ $this->user_id ])
+            ->pluck('user_id')
+            ->unique()
+            ->values();
+    }
+
     public function messages()
     {
         return $this->hasMany(TicketMessage::class);
+    }
+
+    public function opener()
+    {
+        return $this->belongsTo(config('laravel-tickets.user'));
     }
 
     public function user()
@@ -41,6 +63,11 @@ class Ticket extends Model
     public function reference()
     {
         return $this->hasOne(TicketReference::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(TicketActivity::class);
     }
 
     public function scopeState($query, $state)

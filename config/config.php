@@ -51,7 +51,8 @@ return [
         'ticket-messages-table' => 'ticket_messages',
         'ticket-uploads-table' => 'ticket_uploads',
         'ticket-categories-table' => 'ticket_categories',
-        'ticket-references-table' => 'ticket_references'
+        'ticket-references-table' => 'ticket_references',
+        'ticket-activities-table' => 'ticket_activities'
     ],
 
     /*
