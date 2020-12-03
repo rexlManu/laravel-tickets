@@ -55,6 +55,9 @@ Currently the views are only implemented for bootstrap. After publishing, you sh
 
 The trait ``HasTickets`` should be added to the user model
 ```php
+
+use RexlManu\LaravelTickets\Traits\HasTickets;
+
 class User
 {
     use HasTickets; // important for laravel-tickets
@@ -64,7 +67,10 @@ class User
 The ticket routes can be implemented via the macro
 ```php
 
-use RexlManu\LaravelTickets\Controllers\TicketControllable;class TicketController extends Controller {
+use Illuminate\Routing\Controller;
+use RexlManu\LaravelTickets\Controllers\TicketControllable;
+
+class TicketController extends Controller {
 
   use TicketControllable;
 
@@ -76,7 +82,11 @@ Route::tickets( TicketController::class );
 For ticket referneces
 ```php
 
-use RexlManu\LaravelTickets\Interfaces\TicketReference;use RexlManu\LaravelTickets\Traits\HasTicketReference;class ExampleModel extends Model implements TicketReference {
+use Illuminate\Database\Eloquent\Model;
+use RexlManu\LaravelTickets\Interfaces\TicketReference;
+use RexlManu\LaravelTickets\Traits\HasTicketReference;
+
+class ExampleModel extends Model implements TicketReference {
 
   use HasTicketReference;
 
