@@ -4,6 +4,8 @@
 namespace RexlManu\LaravelTickets\Observers;
 
 
+use RexlManu\LaravelTickets\Events\TicketCloseEvent;
+use RexlManu\LaravelTickets\Events\TicketOpenEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketActivity;
 use RexlManu\LaravelTickets\Models\TicketMessage;
@@ -17,11 +19,16 @@ class TicketObserver
         $ticketActivity->ticket()->associate($ticket);
         $ticketActivity->targetable()->associate($ticket);
         $ticketActivity->save();
+
+        event(new TicketOpenEvent($ticket));
     }
 
     public function updated(Ticket $ticket)
     {
         if ($ticket->wasChanged('type')) {
+            if ($ticket->type === 'CLOSED') {
+                event(new TicketCloseEvent($ticket));
+            }
             if ($ticket->type == 'ANSWERED') {
                 return;
             }

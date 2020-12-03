@@ -5,6 +5,7 @@ namespace RexlManu\LaravelTickets\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use RexlManu\LaravelTickets\Traits\HasConfigModel;
 
 class Ticket extends Model
@@ -28,7 +29,7 @@ class Ticket extends Model
      *
      * @param false $ticketCreatorIncluded if the ticket user should be included
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getRelatedUsers($ticketCreatorIncluded = false)
     {
@@ -72,7 +73,7 @@ class Ticket extends Model
 
     public function scopeState($query, $state)
     {
-        return $query->where('state', $state);
+        return $query->whereIn('state', is_string($state) ? [ $state ] : $state);
     }
 
     public function scopePriority($query, $priority)

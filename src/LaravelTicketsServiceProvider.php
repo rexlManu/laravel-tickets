@@ -2,11 +2,10 @@
 
 namespace RexlManu\LaravelTickets;
 
-use Illuminate\Support\ServiceProvider;
-use RexlManu\LaravelTickets\Commands\AutoCloseCommand;
-use RexlManu\LaravelTickets\Controllers\TicketControllable;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use RexlManu\LaravelTickets\Commands\AutoCloseCommand;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
 use RexlManu\LaravelTickets\Models\TicketUpload;
@@ -54,8 +53,10 @@ class LaravelTicketsServiceProvider extends ServiceProvider
                 __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-tickets'),
             ], 'lang');
 
-            // Registering package commands.
-            $this->commands([ AutoCloseCommand::class ]);
+            if (config('laravel-tickets.autoclose-days') > 0) {
+                // Registering package commands.
+                $this->commands([ AutoCloseCommand::class ]);
+            }
         }
     }
 

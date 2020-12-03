@@ -9,9 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use RexlManu\LaravelTickets\Events\TicketCloseEvent;
-use RexlManu\LaravelTickets\Events\TicketMessageEvent;
-use RexlManu\LaravelTickets\Events\TicketOpenEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
 use RexlManu\LaravelTickets\Models\TicketReference;
@@ -100,7 +97,7 @@ trait TicketControllable
                 'sometimes',
                 'file',
                 'max:' . config('laravel-tickets.file.size-limit'),
-                'mimes:' . config('laravel-tickets.file.memes'),
+                'mimes:' . config('laravel-tickets.file.mimetype'),
             ],
         ];
         if (config('laravel-tickets.category')) {
@@ -145,8 +142,6 @@ trait TicketControllable
         $ticketMessage->save();
 
         $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
-
-        event(new TicketOpenEvent($ticket));
 
         $message = trans('The ticket was successfully created');
         return $request->wantsJson() ?
@@ -222,7 +217,7 @@ trait TicketControllable
                 'sometimes',
                 'file',
                 'max:' . config('laravel-tickets.file.size-limit'),
-                'mimes:' . config('laravel-tickets.file.memes'),
+                'mimes:' . config('laravel-tickets.file.mimetype'),
             ]
         ]);
 
@@ -234,8 +229,6 @@ trait TicketControllable
         $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
 
         $ticket->update([ 'state' => 'OPEN' ]);
-
-        event(new TicketMessageEvent($ticket, $ticketMessage));
 
         $message = trans('Your answer was sent successfully');
         return $request->wantsJson() ?
@@ -269,7 +262,6 @@ trait TicketControllable
                 );
         }
         $ticket->update([ 'state' => 'CLOSED' ]);
-        event(new TicketCloseEvent($ticket));
 
         $message = trans('The ticket was successfully closed');
         return \request()->wantsJson() ?

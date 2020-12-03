@@ -4,7 +4,6 @@
 namespace RexlManu\LaravelTickets\Commands;
 
 use Illuminate\Console\Command;
-use RexlManu\LaravelTickets\Events\TicketCloseEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
 
 class AutoCloseCommand extends Command
@@ -30,13 +29,12 @@ class AutoCloseCommand extends Command
      */
     public function handle()
     {
-        $tickets = Ticket::query()->where(
+        Ticket::query()->state([ 'OPEN', 'ANSWERED' ])->where(
             'updated_at',
             '<',
             now()->subDays(config('laravel-tickets.autoclose-days'))
-        );
-
-        $tickets->update([ 'state' => 'CLOSED' ]);
-        $tickets->get()->each(fn(Ticket $ticket) => event(new TicketCloseEvent($ticket)));
+        )->each(function (Ticket $ticket) {
+            $ticket->update([ 'state' => 'CLOSED' ]);
+        });
     }
 }

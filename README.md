@@ -14,20 +14,24 @@ Simple but effective solution to provide support. Due to its lightweight constru
 - file upload support
 - permission support
 - ticket categories
+- priority
 - easy to customize
 - uuid support
+- declare ticket reference
+- multiple language support
 
 ## Preview
 
 Ticket list:
-![ticket list](.github/images/image1-d4as.png)
+![ticket list](.github/images/image1-4ads5.png)
 Ticket creation:
-![ticket create](.github/images/image2-d4as.png)
+![ticket create](.github/images/image2-4ads5.png)
 Ticket show:
-![ticket show](.github/images/image3-d4as.png)
+![ticket show](.github/images/image3-4ads5.png)
 
 ## Todos
 
+- Improve documentation
 - tailwind and vue frontend
 - admin ticket scaffold
 - unit tests
@@ -53,16 +57,16 @@ The trait ``HasTickets`` should be added to the user model
 ```php
 class User
 {
-    use \RexlManu\LaravelTickets\Traits\HasTickets; // important for laravel-tickets
+    use HasTickets; // important for laravel-tickets
 }
 ```
 
 The ticket routes can be implemented via the macro
 ```php
 
-class TicketController extends Controller {
+use RexlManu\LaravelTickets\Controllers\TicketControllable;class TicketController extends Controller {
 
-  use \RexlManu\LaravelTickets\Controllers\TicketControllable;
+  use TicketControllable;
 
 }
 
@@ -72,9 +76,9 @@ Route::tickets( TicketController::class );
 For ticket referneces
 ```php
 
-class ExampleModel extends Model implements \RexlManu\LaravelTickets\Interfaces\TicketReference {
+use RexlManu\LaravelTickets\Interfaces\TicketReference;use RexlManu\LaravelTickets\Traits\HasTicketReference;class ExampleModel extends Model implements TicketReference {
 
-  use \RexlManu\LaravelTickets\Traits\HasTicketReference;
+  use HasTicketReference;
 
   // Check if user has access to this model
   function hasReferenceAccess() : bool {

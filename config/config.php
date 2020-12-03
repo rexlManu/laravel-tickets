@@ -26,7 +26,7 @@ return [
          * Allowed file types
          * Full extension list: https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
          */
-        'memes' => 'pdf,png,jpg',
+        'mimetype' => 'pdf,png,jpg',
         /*
          * Maximal file uploads for message
          */
@@ -61,6 +61,7 @@ return [
     'maximal-open-tickets' => 3,
     /*
      * How many days after last message sent, the ticket gets as closed declared
+     * Use 0 for disabling this feature
      */
     'autoclose-days' => 7,
 
