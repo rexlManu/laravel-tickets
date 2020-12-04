@@ -4,8 +4,6 @@
 namespace RexlManu\LaravelTickets\Traits;
 
 
-use Ramsey\Uuid\Uuid;
-
 trait HasConfigModel
 {
 
@@ -18,14 +16,4 @@ trait HasConfigModel
     {
         return config('laravel-tickets.model.incrementing');
     }
-
-    public static function bootHasUuid()
-    {
-        static::creating(function ($model) {
-            if (config('laravel-tickets.model.uuid') && empty($model->id)) {
-                $model->id = Uuid::uuid4();
-            }
-        });
-    }
-
 }

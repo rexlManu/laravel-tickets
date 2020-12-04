@@ -4,6 +4,7 @@
 namespace RexlManu\LaravelTickets\Observers;
 
 
+use Ramsey\Uuid\Uuid;
 use RexlManu\LaravelTickets\Events\TicketCloseEvent;
 use RexlManu\LaravelTickets\Events\TicketOpenEvent;
 use RexlManu\LaravelTickets\Models\Ticket;
@@ -42,6 +43,13 @@ class TicketObserver
     public function deleting(Ticket $ticket)
     {
         $ticket->messages()->get()->each(fn(TicketMessage $ticketMessage) => $ticketMessage->delete());
+    }
+
+    public function creating(Ticket $ticket)
+    {
+        if (config('laravel-tickets.model.uuid') && empty($model->id)) {
+            $ticket->id = Uuid::uuid4();
+        }
     }
 
 }
