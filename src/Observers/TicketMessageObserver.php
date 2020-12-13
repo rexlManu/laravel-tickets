@@ -20,6 +20,10 @@ class TicketMessageObserver
         $ticketActivity->targetable()->associate($ticketMessage);
         $ticketActivity->save();
 
+        $ticket = $ticketMessage->ticket;
+        if ($ticketMessage->user_id != $ticket->user_id)
+            $ticket->update([ 'state' => 'ANSWERED' ]);
+        
         event(new TicketMessageEvent($ticketMessage->ticket()->first(), $ticketMessage));
     }
 
