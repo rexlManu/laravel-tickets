@@ -33,9 +33,7 @@ class TicketObserver
             if ($ticket->state == 'ANSWERED') {
                 return;
             }
-            /**
-             * EDIT BY RENE, bin einfach krasser als Manu :O
-             */
+
             $ticketActivity = new TicketActivity([ 'type' => $ticket->state == 'OPEN' ? 'OPEN' : 'CLOSE' ]);
             $ticketActivity->ticket()->associate($ticket);
             $ticketActivity->targetable()->associate($ticket);
