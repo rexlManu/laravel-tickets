@@ -26,14 +26,17 @@ class TicketObserver
 
     public function updated(Ticket $ticket)
     {
-        if ($ticket->wasChanged('type')) {
-            if ($ticket->type === 'CLOSED') {
+        if ($ticket->wasChanged('state')) {
+            if ($ticket->state === 'CLOSED') {
                 event(new TicketCloseEvent($ticket));
             }
-            if ($ticket->type == 'ANSWERED') {
+            if ($ticket->state == 'ANSWERED') {
                 return;
             }
-            $ticketActivity = new TicketActivity([ 'type' => $ticket->type == 'OPEN' ?? 'CLOSED' ]);
+            /**
+             * EDIT BY RENE, bin einfach krasser als Manu :O
+             */
+            $ticketActivity = new TicketActivity([ 'type' => $ticket->state == 'OPEN' ? 'OPEN' : 'CLOSE' ]);
             $ticketActivity->ticket()->associate($ticket);
             $ticketActivity->targetable()->associate($ticket);
             $ticketActivity->save();
