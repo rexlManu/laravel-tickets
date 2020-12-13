@@ -3,7 +3,14 @@
 
 namespace RexlManu\LaravelTickets\Traits;
 
-
+/**
+ * Trait HasTicketReference
+ *
+ * For ticket references, when used on a model,
+ * the model also needs to be registered in the configuration
+ *
+ * @package RexlManu\LaravelTickets\Traits
+ */
 trait HasTicketReference
 {
 

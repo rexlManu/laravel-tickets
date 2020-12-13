@@ -13,6 +13,13 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use RexlManu\LaravelTickets\Models\Ticket;
 
+/**
+ * Class TicketOpenEvent
+ *
+ * Fired when a ticket is created
+ *
+ * @package RexlManu\LaravelTickets\Events
+ */
 class TicketOpenEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

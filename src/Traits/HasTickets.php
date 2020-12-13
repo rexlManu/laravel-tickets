@@ -7,6 +7,13 @@ namespace RexlManu\LaravelTickets\Traits;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use RexlManu\LaravelTickets\Models\Ticket;
 
+/**
+ * Trait HasTickets
+ *
+ * Extends the user model with functions
+ *
+ * @package RexlManu\LaravelTickets\Traits
+ */
 trait HasTickets
 {
 

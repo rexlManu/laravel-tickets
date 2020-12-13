@@ -6,6 +6,14 @@ namespace RexlManu\LaravelTickets\Commands;
 use Illuminate\Console\Command;
 use RexlManu\LaravelTickets\Models\Ticket;
 
+/**
+ * Class AutoCloseCommand
+ *
+ * The command checks if a ticket is unanswered a specific time,
+ * that is in the configuration defined and then close it
+ *
+ * @package RexlManu\LaravelTickets\Commands
+ */
 class AutoCloseCommand extends Command
 {
     /**

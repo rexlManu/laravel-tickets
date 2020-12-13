@@ -3,7 +3,13 @@
 
 namespace RexlManu\LaravelTickets\Helper;
 
-
+/**
+ * Class ReferenceHelper
+ *
+ * Provides helper functions for the ticket reference
+ *
+ * @package RexlManu\LaravelTickets\Helper
+ */
 class ReferenceHelper
 {
 

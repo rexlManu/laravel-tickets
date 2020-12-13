@@ -14,6 +14,13 @@ use Illuminate\Queue\SerializesModels;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
 
+/**
+ * Class TicketMessageEvent
+ *
+ * Fired when a ticket gets answered by a user
+ *
+ * @package RexlManu\LaravelTickets\Events
+ */
 class TicketMessageEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

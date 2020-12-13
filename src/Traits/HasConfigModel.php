@@ -3,7 +3,13 @@
 
 namespace RexlManu\LaravelTickets\Traits;
 
-
+/**
+ * Trait HasConfigModel
+ *
+ * Is used internal for using configuration elements
+ *
+ * @package RexlManu\LaravelTickets\Traits
+ */
 trait HasConfigModel
 {
 
