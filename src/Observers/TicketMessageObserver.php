@@ -20,13 +20,13 @@ class TicketMessageObserver
         $ticketActivity->targetable()->associate($ticketMessage);
         $ticketActivity->save();
 
-        $ticket = $ticketMessage->ticket;
+        $ticket = $ticketMessage->ticket()->first();
 
         if ($ticketMessage->user_id != $ticket->user_id) {
             $ticket->update([ 'state' => 'ANSWERED' ]);
         }
 
-        event(new TicketMessageEvent($ticketMessage->ticket()->first(), $ticketMessage));
+        event(new TicketMessageEvent($ticket, $ticketMessage));
     }
 
     public function deleting(TicketMessage $ticketMessage)
