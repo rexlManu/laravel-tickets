@@ -4,6 +4,11 @@
  * The configuration for laravel-tickets
  */
 return [
+    
+    'routing' => [
+        'prefix' => 'tickets'
+    ]
+    
     /*
      * Should file upload be enabled?
      */
