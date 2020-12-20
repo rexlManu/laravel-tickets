@@ -7,7 +7,7 @@ return [
     
     'routing' => [
         'prefix' => 'tickets'
-    ]
+    ],
     
     /*
      * Should file upload be enabled?
