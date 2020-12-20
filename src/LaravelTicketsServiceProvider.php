@@ -80,7 +80,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
         foreach ([ 'ticketSystem', 'tickets' ] as $routeMacroName) {
             Router::macro($routeMacroName, function ($controller) {
                 Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () use ($controller) {
-                    Route::prefix('/tickets')->group(function () use ($controller) {
+                    Route::prefix(config('laravel-tickets.routing.prefix', 'tickets'))->group(function () use ($controller) {
                         Route::get('/', [ $controller, 'index' ])->name('tickets.index');
                         Route::post('/', [ $controller, 'store' ])->name('tickets.store');
                         Route::get('/create', [ $controller, 'create' ])->name('tickets.create');
