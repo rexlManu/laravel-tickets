@@ -35,6 +35,10 @@ Ticket show:
 - tailwind and vue frontend
 - admin ticket scaffold
 - unit tests
+- uuid:
+  - rule,
+  - migrations
+  - controller stuff
 
 ## Installation
 
