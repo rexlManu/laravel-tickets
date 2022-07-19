@@ -55,7 +55,7 @@ class LaravelTicketsServiceProvider extends ServiceProvider
 
             if (config('laravel-tickets.autoclose-days') > 0) {
                 // Registering package commands.
-                $this->commands([ AutoCloseCommand::class ]);
+                $this->commands([AutoCloseCommand::class]);
             }
         }
     }
@@ -77,25 +77,42 @@ class LaravelTicketsServiceProvider extends ServiceProvider
     public function routes()
     {
         // Macro routing
-        foreach ([ 'ticketSystem', 'tickets' ] as $routeMacroName) {
+        foreach (['ticketSystem', 'tickets'] as $routeMacroName) {
             Router::macro($routeMacroName, function ($controller) {
                 Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () use ($controller) {
                     Route::prefix('/tickets')->group(function () use ($controller) {
-                        Route::get('/', [ $controller, 'index' ])->name('tickets.index');
-                        Route::post('/', [ $controller, 'store' ])->name('tickets.store');
-                        Route::get('/create', [ $controller, 'create' ])->name('tickets.create');
+                        Route::get('/', [$controller, 'index'])->name('tickets.index');
+                        Route::post('/', [$controller, 'store'])->name('tickets.store');
+                        Route::get('/create', [$controller, 'create'])->name('tickets.create');
                         Route::prefix('{ticket}')->group(function () use ($controller) {
-                            Route::get('/', [ $controller, 'show' ])->name('tickets.show');
-                            Route::post('/', [ $controller, 'close' ])->name('tickets.close');
-                            Route::post('/message', [ $controller, 'message' ])->name('tickets.message');
+                            Route::get('/', [$controller, 'show'])->name('tickets.show');
+                            Route::post('/', [$controller, 'close'])->name('tickets.close');
+                            Route::post('/message', [$controller, 'message'])->name('tickets.message');
                             Route::prefix('{ticketUpload}')->group(function () use ($controller) {
-                                Route::get('/download', [ $controller, 'download' ])->name('tickets.download');
+                                Route::get('/download', [$controller, 'download'])->name('tickets.download');
                             });
                         });
                     });
                 });
             });
         }
+        /**
+         * Categories
+         */
+        Router::macro('categories', function ($controller) {
+            Route::middleware(config('laravel-tickets.guard'))->name('laravel-tickets.')->group(function () use ($controller) {
+                Route::prefix('/categories')->group(function () use ($controller) {
+                    Route::get('/', [$controller, 'index'])->name('categories.index');
+                    Route::post('/', [$controller, 'store'])->name('categories.store');
+                    Route::get('/create', [$controller, 'create'])->name('categories.create');
+                    Route::prefix('{category}')->group(function () use ($controller) {
+                        Route::get('show', [$controller, 'show'])->name('categories.show');
+                        Route::get('edit', [$controller, 'edit'])->name('categories.edit');
+                        Route::delete('/', [$controller, 'destroy'])->name('categories.destroy');
+                    });
+                });
+            });
+        });
     }
 
     private function observers()

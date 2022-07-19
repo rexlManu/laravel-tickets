@@ -33,7 +33,7 @@ trait TicketControllable
      */
     public function __construct()
     {
-        if (! config('laravel-tickets.permission')) {
+        if (!config('laravel-tickets.permission')) {
             return;
         }
 
@@ -64,7 +64,8 @@ trait TicketControllable
 
         return request()->wantsJson() ?
             response()->json(compact('tickets')) :
-            view('laravel-tickets::tickets.index',
+            view(
+                'laravel-tickets::tickets.index',
                 compact('tickets')
             );
     }
@@ -89,10 +90,10 @@ trait TicketControllable
     public function store(Request $request)
     {
         $rules = [
-            'subject' => [ 'required', 'string', 'max:191' ],
-            'priority' => [ 'required', Rule::in(config('laravel-tickets.priorities')) ],
-            'message' => [ 'required', 'string' ],
-            'files' => [ 'max:' . config('laravel-tickets.file.max-files') ],
+            'subject' => ['required', 'string', 'max:191'],
+            'priority' => ['required', Rule::in(config('laravel-tickets.priorities'))],
+            'message' => ['required', 'string'],
+            'files' => ['max:' . config('laravel-tickets.file.max-files')],
             'files.*' => [
                 'sometimes',
                 'file',
@@ -101,13 +102,13 @@ trait TicketControllable
             ],
         ];
         if (config('laravel-tickets.category')) {
-            $rules[ 'category_id' ] = [
+            $rules['category_id'] = [
                 'required',
                 Rule::exists(config('laravel-tickets.database.ticket-categories-table'), 'id'),
             ];
         }
         if (config('laravel-tickets.references')) {
-            $rules[ 'reference' ] = [
+            $rules['reference'] = [
                 config('laravel-tickets.references-nullable') ? 'nullable' : 'required',
                 new TicketReferenceRule(),
             ];
@@ -127,11 +128,11 @@ trait TicketControllable
         );
 
         if (array_key_exists('reference', $data)) {
-            $reference = explode(',', $data[ 'reference' ]);
+            $reference = explode(',', $data['reference']);
             $ticketReference = new TicketReference();
             $ticketReference->ticket()->associate($ticket);
             $ticketReference->referenceable()->associate(
-                resolve($reference[ 0 ])->find($reference[ 1 ])
+                resolve($reference[0])->find($reference[1])
             );
             $ticketReference->save();
         }
@@ -141,7 +142,7 @@ trait TicketControllable
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
 
-        $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
+        $this->handleFiles($data['files'] ?? [], $ticketMessage);
 
         $message = trans('The ticket was successfully created');
         return $request->wantsJson() ?
@@ -164,19 +165,22 @@ trait TicketControllable
      */
     public function show(Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user()) &&
-            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
+        if (
+            !$ticket->user()->get()->contains(\request()->user()) &&
+            !request()->user()->can(config('laravel-tickets.permissions.all-ticket'))
+        ) {
             return abort(403);
         }
 
-        $messages = $ticket->messages()->with([ 'user', 'uploads' ])->orderBy('created_at', 'desc');
+        $messages = $ticket->messages()->with(['user', 'uploads'])->orderBy('created_at', 'desc');
 
         return \request()->wantsJson() ?
             response()->json(compact(
                 'ticket',
                 'messages'
             )) :
-            view('laravel-tickets::tickets.show',
+            view(
+                'laravel-tickets::tickets.show',
                 compact(
                     'ticket',
                     'messages'
@@ -195,12 +199,14 @@ trait TicketControllable
      */
     public function message(Request $request, Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user()) &&
-            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
+        if (
+            !$ticket->user()->get()->contains(\request()->user()) &&
+            !request()->user()->can(config('laravel-tickets.permissions.all-ticket'))
+        ) {
             return abort(403);
         }
 
-        if (! config('laravel-tickets.open-ticket-with-answer') && $ticket->state === 'CLOSED') {
+        if (!config('laravel-tickets.open-ticket-with-answer') && $ticket->state === 'CLOSED') {
             $message = trans('You cannot reply to a closed ticket');
             return \request()->wantsJson() ?
                 response()->json(compact('message')) :
@@ -211,8 +217,8 @@ trait TicketControllable
         }
 
         $data = $request->validate([
-            'message' => [ 'required', 'string' ],
-            'files' => [ 'max:' . config('laravel-tickets.file.max-files') ],
+            'message' => ['required', 'string'],
+            'files' => ['max:' . config('laravel-tickets.file.max-files')],
             'files.*' => [
                 'sometimes',
                 'file',
@@ -226,9 +232,9 @@ trait TicketControllable
         $ticketMessage->ticket()->associate($ticket);
         $ticketMessage->save();
 
-        $this->handleFiles($data[ 'files' ] ?? [], $ticketMessage);
+        $this->handleFiles($data['files'] ?? [], $ticketMessage);
 
-        $ticket->update([ 'state' => 'OPEN' ]);
+        $ticket->update(['state' => 'OPEN']);
 
         $message = trans('Your answer was sent successfully');
         return $request->wantsJson() ?
@@ -248,8 +254,10 @@ trait TicketControllable
      */
     public function close(Ticket $ticket)
     {
-        if (! $ticket->user()->get()->contains(\request()->user()) &&
-            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
+        if (
+            !$ticket->user()->get()->contains(\request()->user()) &&
+            !request()->user()->can(config('laravel-tickets.permissions.all-ticket'))
+        ) {
             return abort(403);
         }
         if ($ticket->state === 'CLOSED') {
@@ -261,7 +269,7 @@ trait TicketControllable
                     $message
                 );
         }
-        $ticket->update([ 'state' => 'CLOSED' ]);
+        $ticket->update(['state' => 'CLOSED']);
 
         $message = trans('The ticket was successfully closed');
         return \request()->wantsJson() ?
@@ -283,8 +291,10 @@ trait TicketControllable
      */
     public function download(Ticket $ticket, TicketUpload $ticketUpload)
     {
-        if (! $ticket->user()->get()->contains(\request()->user()) &&
-            ! request()->user()->can(config('laravel-tickets.permissions.all-ticket'))) {
+        if (
+            !$ticket->user()->get()->contains(\request()->user()) &&
+            !request()->user()->can(config('laravel-tickets.permissions.all-ticket'))
+        ) {
             return abort(403);
         }
 
@@ -306,7 +316,7 @@ trait TicketControllable
      */
     private function handleFiles($files, TicketMessage $ticketMessage)
     {
-        if (! config('laravel-tickets.files') || $files == null) {
+        if (!config('laravel-tickets.files') || $files == null) {
             return;
         }
         foreach ($files as $file) {
@@ -319,5 +329,4 @@ trait TicketControllable
             ]);
         }
     }
-
 }

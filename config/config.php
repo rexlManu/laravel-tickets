@@ -40,7 +40,7 @@ return [
     /*
      * The default guard for authentication middleware
      */
-    'guard' => [ 'web', 'auth' ],
+    'guard' => ['web', 'auth'],
 
     /*
      * Database tables name
@@ -90,6 +90,13 @@ return [
         'show-ticket' => 'can:tickets.show',
         'message-ticket' => 'can:tickets.message',
         'download-ticket' => 'can:tickets.download',
+        /**
+         * Categories
+         */
+        'create-category' => 'can:categories.create',
+        'list-category' => 'can:categories.index',
+        'show-category' => 'can:categories.show',
+        'edit-category' => 'can:categories.edit',
         /*
          * For administrate tickets
          */
@@ -99,7 +106,7 @@ return [
     /*
      * The priorities
      */
-    'priorities' => [ 'LOW', 'MID', 'HIGH' ],
+    'priorities' => ['LOW', 'MID', 'HIGH'],
     /*
      * Layout view
      */
