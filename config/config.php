@@ -97,6 +97,7 @@ return [
         'list-category' => 'can:categories.index',
         'show-category' => 'can:categories.show',
         'edit-category' => 'can:categories.edit',
+        'delete-category' => 'can:categories.delete',
         /*
          * For administrate tickets
          */
