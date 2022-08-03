@@ -6,16 +6,8 @@ namespace RexlManu\LaravelTickets\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketCategory;
-use RexlManu\LaravelTickets\Models\TicketMessage;
-use RexlManu\LaravelTickets\Models\TicketReference;
-use RexlManu\LaravelTickets\Models\TicketUpload;
-use RexlManu\LaravelTickets\Rule\TicketReferenceRule;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class TicketController
@@ -71,45 +63,11 @@ trait CategoryControllable
      */
     public function create()
     {
-        return view('laravel-tickets::categories.create');
+        return view('laravel-tickets::categories.data')->with([
+            'action' => 'add',
+            'category' => new TicketCategory
+        ]);
     }
-
-    /**
-     * Creates a @param Request $request the request
-     *
-     * @return View|JsonResponse|RedirectResponse
-     * @link TicketCategory
-     *
-     */
-    public function store(Request $request)
-    {
-        $rules = [
-            'translation' => ['required', 'string', 'max:191'],
-        ];
-        $data = $request->validate($rules);
-
-        if ($request->has('action') && $request->action == 'edit') {
-            $category = TicketCategory::where('id', $request->category_id)->update(
-                $request->only('translation')
-            );
-            $message = trans('The category was successfully updated');
-        } else {
-            $category = TicketCategory::create(
-                $request->only('translation')
-            );
-            $message = trans('The category was successfully created');
-        }
-
-        return $request->wantsJson() ?
-            response()->json(compact('category')) :
-            redirect(route(
-                'laravel-tickets.categories.index'
-            ))->with([
-                'message' => $message,
-                'type' => 'success'
-            ]);
-    }
-
     /**
      * Show detailed informations about the @param TicketCategory $category
      *
@@ -129,7 +87,7 @@ trait CategoryControllable
                 'category',
             )) :
             view(
-                'laravel-tickets::categories.show',
+                'laravel-tickets::categories.data',
                 compact(
                     'category',
                 )
@@ -154,7 +112,7 @@ trait CategoryControllable
                 'category',
             )) :
             view(
-                'laravel-tickets::categories.show',
+                'laravel-tickets::categories.data',
                 compact(
                     'category',
                 )
@@ -172,7 +130,9 @@ trait CategoryControllable
 
         $category->delete();
 
-        $message = trans('The category was successfully deleted');
+        $message = __('The category was successfully deleted');
+
+        session()->flash('success', $message);
 
         return \request()->wantsJson() ?
             response()->json(compact(

@@ -5,7 +5,10 @@ namespace RexlManu\LaravelTickets;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use RexlManu\LaravelTickets\Commands\AutoCloseCommand;
+use RexlManu\LaravelTickets\Components\Alerts;
+use RexlManu\LaravelTickets\Components\Categories\CategoryForm;
 use RexlManu\LaravelTickets\Models\Ticket;
 use RexlManu\LaravelTickets\Models\TicketMessage;
 use RexlManu\LaravelTickets\Models\TicketUpload;
@@ -58,6 +61,12 @@ class LaravelTicketsServiceProvider extends ServiceProvider
                 $this->commands([AutoCloseCommand::class]);
             }
         }
+
+        /**
+         * Register components
+         */
+        Livewire::component('laravel-tickets::alerts', Alerts::class);
+        Livewire::component('laravel-tickets::category-form', CategoryForm::class);
     }
 
     /**
