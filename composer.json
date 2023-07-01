@@ -1,11 +1,11 @@
 {
-    "name": "rexlManu/laravel-tickets",
+    "name": "alessiobrendt/laravel-tickets",
     "description": "Simple but effective solutions to provide support",
     "keywords": [
         "rexlmanu",
         "laravel-tickets"
     ],
-    "homepage": "https://github.com/rexlmanu/laravel-tickets",
+    "homepage": "https://github.com/alessiobrendt/laravel-tickets",
     "license": "MIT",
     "type": "library",
     "authors": [
